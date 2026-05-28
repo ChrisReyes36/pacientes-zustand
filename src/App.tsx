@@ -1,7 +1,11 @@
+import { ToastContainer } from "react-toastify";
 import PatientForm from "./components/PatientForm";
 import PatientsList from "./components/PatientsList";
+import { usePatientStore } from "./store";
 
 function App() {
+  const activeId = usePatientStore((state) => state.activeId);
+
   return (
     <>
       <div className="container mx-auto mt-20">
@@ -11,10 +15,12 @@ function App() {
         </h1>
 
         <div className="mt-12 md:flex">
-          <PatientForm />
+          <PatientForm key={activeId || "new"} />
           <PatientsList />
         </div>
       </div>
+
+      <ToastContainer />
     </>
   );
 }

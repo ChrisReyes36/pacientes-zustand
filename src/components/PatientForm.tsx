@@ -1,19 +1,34 @@
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import Error from "./Error";
 import type { DraftPatient } from "../types";
 import { usePatientStore } from "../store";
 
 const PatientForm = () => {
   const addPatient = usePatientStore((state) => state.addPatient);
+  const activeId = usePatientStore((state) => state.activeId);
+  const patients = usePatientStore((state) => state.patients);
+  const updatePatient = usePatientStore((state) => state.updatePatient);
+
+  const activePatient = patients.find((patient) => patient.id === activeId);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<DraftPatient>();
+  } = useForm<DraftPatient>({
+    defaultValues: activePatient,
+  });
 
   const registerPatient = (data: DraftPatient) => {
-    addPatient(data);
+    if (activeId) {
+      updatePatient(data);
+      toast.success("Paciente actualizado correctamente");
+    } else {
+      addPatient(data);
+      toast.success("Paciente registrado correctamente");
+    }
     reset();
   };
 
